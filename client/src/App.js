@@ -111,7 +111,7 @@ function App() {
       if (text === "") {
         error = name + " is required";
       } else {
-        if (name === "Name" && name === "Message") {
+        if (name === "Name" || name === "Message") {
           error =
             name +
             " cannot contain the characters: " +
@@ -162,7 +162,7 @@ function App() {
               onBlur={(e) => {
                 onBlur(
                   e.target.value,
-                  /^[a-zàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžßÇŒÆČŠŽ∂ð ,.'-]{1,250}$/iu,
+                  /^[a-zàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžßÇŒÆČŠŽ∂ð ,.'-]{1,250}$/giu,
                   /[^a-zàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžßÇŒÆČŠŽ∂ð\s,.'-]/giu,
                   "Name"
                 );
@@ -179,7 +179,7 @@ function App() {
               name="amount"
               onFocus={() => setAmountError("")}
               onBlur={(e) => {
-                onBlur(e.target.value, /^[\d]{1,3}$/iu, "", "Amount");
+                onBlur(e.target.value, /^[\d]{1,3}$/giu, "", "Amount");
               }}
             ></input>
             <small className={amountError === "" ? "hidden" : "visible"}>
@@ -187,7 +187,7 @@ function App() {
             </small>
           </div>
           <div className="form-group">
-            <label htmlFor="email">Email</label>
+            <label htmlFor="email">Email*</label>
             <input
               type="text"
               name="email"
@@ -195,7 +195,7 @@ function App() {
               onBlur={(e) => {
                 onBlur(
                   e.target.value,
-                  /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/iu,
+                  /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/giu,
                   "",
                   "Email"
                 );
@@ -214,8 +214,8 @@ function App() {
               onBlur={(e) => {
                 onBlur(
                   e.target.value,
-                  /^[a-z\d\-_\s!"#$%&'()*+,-.:;<=>?@[\]^_~]+$/iu,
-                  /[^a-z\d\-_\s!"#$%&'()*+,-./:;<=>?@[\]^/_~]+$/i,
+                  /^[a-z\d\-_\s!"#$%&'()*+,-.:;<=>?@[\]^_~]+$/giu,
+                  /[^a-z\d\-_\s!"#$%&'()*+,-./:;<=>?@[\]^/_~]+$/giu,
                   "Message"
                 );
               }}
