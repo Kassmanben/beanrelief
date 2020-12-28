@@ -151,3 +151,27 @@ form {
   width: 367px;
   margin: auto;
 }
+
+@media only screen and (max-width: 500px) {
+  /* For mobile phones: */
+  h1 {
+    font-size: xx-large;
+  }
+
+  h2 {
+    width: 300px !important;
+  }
+
+  h3 {
+    font-size: x-large;
+  }
+
+  button {
+    font-size: medium;
+    margin: 5px;
+  }
+
+  .ReactModal__Content.ReactModal__Content--after-open {
+    width: 300px !important;
+  }
+}

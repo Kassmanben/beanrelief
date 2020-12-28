@@ -127,7 +127,7 @@ function App() {
       if (name === "") {
         setNameError("Name is required");
       }
-      if (amount === 0 || amount === "") {
+      if ((amount === 0 || amount === "") && modalStyle === "aid") {
         setAmountError("Amount is required");
       }
       if (email === "") {
@@ -166,7 +166,7 @@ function App() {
             " cannot contain the characters: " +
             whichCharactersAreInvalidByRegexPattern(text, inverse);
         } else if (name === "Amount") {
-          error = "Number must be less that 1000";
+          error = "Number must be less than 1000";
         } else if (name === "Email") {
           error = "Invalid email address";
         }
@@ -205,13 +205,13 @@ function App() {
           Ben Kassman
         </a>
         , with contributions from friends. Each month, this pool of money will
-        be made avaiable for anyone who needs it. Any remaining money in the
+        be made available to anyone who needs it. Any remaining money in the
         pool at the end of the month will be donated to a larger mutual aid
         fund.
       </h2>
       <h3>January - $710 remaining</h3>
       <button onClick={() => openModal("aid")}>Request Aid</button>
-      <button onClick={() => openModal("offer")}>Contribute to Pool</button>
+      <button onClick={() => openModal("offer")}>Contribute</button>
       <Modal
         isOpen={modalIsOpen}
         onAfterOpen={afterOpenModal}
@@ -280,7 +280,11 @@ function App() {
             </small>
           </div>
           <div className="form-group">
-            <label htmlFor="message">What will this be used for?*</label>
+            <label htmlFor="message">
+              {modalStyle === "aid"
+                ? "How will this aid money be used?*"
+                : "How would you like to contribute?*"}
+            </label>
             <textarea
               rows="7"
               name="message"
