@@ -37,7 +37,7 @@ app.post("/", (req, res) => {
       .replace("</ul>", "")
       .replace("<li>", "")
       .replace("</li>", ""),
-    subject: "Mutual Aid request",
+    subject: req.body.modalStyle === "aid" ? "Mutual Aid request" : "Offer",
     from_email: "me@kassmanben.com",
     from_name: req.body.emailBody.name,
     to: [

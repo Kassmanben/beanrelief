@@ -1,6 +1,7 @@
 import React from "react";
 import Modal from "react-modal";
 import axios from "axios";
+import "animate.css";
 
 const customStyles = {
   content: {
@@ -15,11 +16,25 @@ const customStyles = {
   },
 };
 
+const aidPlaceholder =
+  "Describe the reasons that you are requesting aid. Ideally, all requests will be filled, but in the case that there are too many, we will try to prioritize medical needs, food, and rent assistance.";
+
+const aidFlashMessage =
+  "Aid request submitted! We will try to respond and coordinate the aid payment within 1-3 days";
+
+const offerPlaceholder =
+  "Let us know how you'd like to help out! Any contribution is helpful!";
+
+const offerFlashMessage =
+  "Thank you for reaching out! We will try to respond and coordinate with you within 1-3 days";
+
 Modal.setAppElement("#root");
 
 function App() {
   var subtitle;
+  const [fadeOut, setFadeOut] = React.useState(false);
   const [modalIsOpen, setIsOpen] = React.useState(false);
+  const [modalStyle, setModalStyle] = React.useState("");
   const [flashMessage, setFlashMessage] = React.useState("");
   const [name, setName] = React.useState("");
   const [nameError, setNameError] = React.useState("");
@@ -30,8 +45,9 @@ function App() {
   const [message, setMessage] = React.useState("");
   const [messageError, setMessageError] = React.useState("");
 
-  function openModal() {
+  function openModal(style) {
     setIsOpen(true);
+    setModalStyle(style);
   }
 
   function afterOpenModal() {
@@ -40,16 +56,27 @@ function App() {
 
   function closeModal() {
     setIsOpen(false);
+    setFadeOut(false);
+    setModalStyle("");
+    setName("");
+    setNameError("");
+    setAmount("");
+    setAmountError("");
+    setEmail("");
+    setEmailError("");
+    setMessage("");
+    setMessageError("");
   }
 
   function sendEmail() {
     if (
       name &&
-      amount &&
+      ((modalStyle === "aid" && amount) || modalStyle === "offer") &&
       message &&
       email &&
       nameError === "" &&
-      amountError === "" &&
+      ((modalStyle === "aid" && amountError === "") ||
+        modalStyle === "offer") &&
       messageError === "" &&
       emailError === ""
     ) {
@@ -57,20 +84,42 @@ function App() {
       axios
         .post("/", {
           emailBody: emailBody,
+          modalStyle: modalStyle,
         })
         .then((res) => {
           try {
             if (res.status === 200) {
-              closeModal();
               setFlashMessage(
-                "Aid request submitted! We will try to respond and coordinate the aid payment within 1-3 days"
+                modalStyle === "aid" ? aidFlashMessage : offerFlashMessage
               );
+              setTimeout(() => {
+                setFadeOut(true);
+                setTimeout(() => {
+                  setFlashMessage("");
+                  setFadeOut(false);
+                }, 500);
+              }, 3000);
+              closeModal();
             } else {
               closeModal();
+              setTimeout(() => {
+                setFadeOut(true);
+                setTimeout(() => {
+                  setFlashMessage("");
+                  setFadeOut(false);
+                }, 500);
+              }, 3000);
               setFlashMessage("Sorry, something went wrong. Please try again");
             }
           } catch (err) {
             closeModal();
+            setTimeout(() => {
+              setFadeOut(true);
+              setTimeout(() => {
+                setFlashMessage("");
+                setFadeOut(false);
+              }, 500);
+            }, 3000);
             setFlashMessage("Sorry, something went wrong. Please try again");
           }
         });
@@ -140,18 +189,41 @@ function App() {
 
   return (
     <div>
-      <div className="flash-message">{flashMessage}</div>
+      <div
+        className={
+          (fadeOut ? "animate__animated animate__fadeOutUp" : "") +
+          (flashMessage !== "" ? " flash-message" : " no-flash-message")
+        }
+        onClick={() => setFadeOut(true)}
+      >
+        {flashMessage}
+      </div>
       <h1>Bean Relief Fund</h1>
-      <h2>January - $710 remaining</h2>
-      <button onClick={openModal}>Request Aid</button>
+      <h2 className="relief-fund-desc">
+        A mutual aid fund set up by{" "}
+        <a href="https://kassmanben.com" target="_blank" rel="noreferrer">
+          Ben Kassman
+        </a>
+        , with contributions from friends. Each month, this pool of money will
+        be made avaiable for anyone who needs it. Any remaining money in the
+        pool at the end of the month will be donated to a larger mutual aid
+        fund.
+      </h2>
+      <h3>January - $710 remaining</h3>
+      <button onClick={() => openModal("aid")}>Request Aid</button>
+      <button onClick={() => openModal("offer")}>Contribute to Pool</button>
       <Modal
         isOpen={modalIsOpen}
         onAfterOpen={afterOpenModal}
         onRequestClose={closeModal}
         style={customStyles}
-        contentLabel="Aid Description"
+        contentLabel={
+          modalStyle === "aid" ? "Aid Request" : "Contribution Request"
+        }
       >
-        <h2 ref={(_subtitle) => (subtitle = _subtitle)}>Aid Description</h2>
+        <h2 ref={(_subtitle) => (subtitle = _subtitle)}>
+          {modalStyle === "aid" ? "Aid Request" : "Contribution Request"}
+        </h2>
         <form>
           <div className="form-group">
             <label htmlFor="name">Name*</label>
@@ -172,20 +244,22 @@ function App() {
               {nameError}
             </small>
           </div>
-          <div className="form-group">
-            <label htmlFor="amount">Amount Requesting ($)*</label>
-            <input
-              type="number"
-              name="amount"
-              onFocus={() => setAmountError("")}
-              onBlur={(e) => {
-                onBlur(e.target.value, /^[\d]{1,3}$/giu, "", "Amount");
-              }}
-            ></input>
-            <small className={amountError === "" ? "hidden" : "visible"}>
-              {amountError}
-            </small>
-          </div>
+          {modalStyle === "aid" && (
+            <div className="form-group">
+              <label htmlFor="amount">Amount Requesting ($)*</label>
+              <input
+                type="number"
+                name="amount"
+                onFocus={() => setAmountError("")}
+                onBlur={(e) => {
+                  onBlur(e.target.value, /^[\d]{1,3}$/giu, "", "Amount");
+                }}
+              ></input>
+              <small className={amountError === "" ? "hidden" : "visible"}>
+                {amountError}
+              </small>
+            </div>
+          )}
           <div className="form-group">
             <label htmlFor="email">Email*</label>
             <input
@@ -219,7 +293,9 @@ function App() {
                   "Message"
                 );
               }}
-              placeholder="Describe the reasons that you are requesting aid. Ideally, all requests will be filled, but in the case that there are too many, we will try to prioritize medical needs, food, and rent assistance."
+              placeholder={
+                modalStyle === "aid" ? aidPlaceholder : offerPlaceholder
+              }
             ></textarea>
             <small className={messageError === "" ? "hidden" : "visible"}>
               {messageError}

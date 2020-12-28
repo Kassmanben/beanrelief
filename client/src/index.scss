@@ -13,11 +13,31 @@ body {
 
 h1 {
   font-size: xxx-large;
+  margin-bottom: 1rem;
 }
 
 h2 {
   font-size: x-large;
   margin-top: 0;
+}
+
+h3 {
+  font-size: xx-large;
+}
+
+a {
+  color: #717171;
+  text-decoration: underline;
+
+  &:hover,
+  &:focus,
+  &:focus-visible,
+  &:focus-visible,
+  &:active,
+  &:visited {
+    cursor: pointer;
+    color: #717171;
+  }
 }
 
 button {
@@ -31,14 +51,14 @@ button {
   height: 2.5rem;
   transition: 0.5s all;
   margin: 0 10px;
-}
 
-button:hover,
-button:focus,
-button:focus-visible,
-button:focus-visible,
-button:active {
-  outline: none;
+  &:hover,
+  &:focus,
+  &:focus-visible,
+  &:focus-visible,
+  &:active {
+    outline: none;
+  }
 }
 
 button:hover {
@@ -48,6 +68,10 @@ button:hover {
   border: 3px solid black;
   transform: translate(-5px, -2px);
   cursor: pointer;
+}
+
+#root {
+  transform: translate(0, -3em);
 }
 
 .App {
@@ -104,5 +128,26 @@ form {
 }
 
 .flash-message {
-  background-color: rgba(127, 255, 212, 0.404);
+  background-color: rgba(0, 255, 169, 0.66);
+  padding: 1em;
+}
+
+.no-flash-message {
+  background-color: transparent;
+  padding: 1.5em 1em;
+}
+
+.flash-message,
+.no-flash-message {
+  font-size: larger;
+  border-radius: 10px;
+}
+
+.relief-fund-desc {
+  text-align: justify;
+  word-break: keep-all;
+  color: #717171;
+  font-size: medium;
+  width: 367px;
+  margin: auto;
 }
