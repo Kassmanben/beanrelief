@@ -44,6 +44,8 @@ function App() {
   const [emailError, setEmailError] = React.useState("");
   const [message, setMessage] = React.useState("");
   const [messageError, setMessageError] = React.useState("");
+  const [socialMedia, setSocialMedia] = React.useState("");
+  const [socialMediaError, setSocialMediaError] = React.useState("");
 
   function openModal(style) {
     setIsOpen(true);
@@ -66,21 +68,26 @@ function App() {
     setEmailError("");
     setMessage("");
     setMessageError("");
+    setSocialMedia("");
+    setSocialMediaError("");
   }
 
   function sendEmail() {
     if (
       name &&
       ((modalStyle === "aid" && amount) || modalStyle === "offer") &&
+      ((modalStyle === "aid" && socialMedia) || modalStyle === "offer") &&
       message &&
       email &&
       nameError === "" &&
       ((modalStyle === "aid" && amountError === "") ||
         modalStyle === "offer") &&
+      ((modalStyle === "aid" && socialMediaError === "") ||
+        modalStyle === "offer") &&
       messageError === "" &&
       emailError === ""
     ) {
-      var emailBody = { name, amount, message, email };
+      var emailBody = { name, amount, message, email, socialMedia };
       axios
         .post("/", {
           emailBody: emailBody,
@@ -124,6 +131,20 @@ function App() {
           }
         });
     } else {
+      console.log(
+        name &&
+          ((modalStyle === "aid" && amount) || modalStyle === "offer") &&
+          ((modalStyle === "aid" && socialMedia) || modalStyle === "offer") &&
+          message &&
+          email &&
+          nameError === "" &&
+          ((modalStyle === "aid" && amountError === "") ||
+            modalStyle === "offer") &&
+          ((modalStyle === "aid" && socialMediaError === "") ||
+            modalStyle === "offer") &&
+          messageError === "" &&
+          emailError === ""
+      );
       if (name === "") {
         setNameError("Name is required");
       }
@@ -135,6 +156,9 @@ function App() {
       }
       if (message === "") {
         setMessageError("Message is required");
+      }
+      if (socialMedia === "") {
+        setSocialMediaError("Social media account is required");
       }
     }
   }
@@ -184,6 +208,9 @@ function App() {
     } else if (name === "Message") {
       setMessage(value);
       setMessageError(error);
+    } else if (name === "Social media account") {
+      setSocialMedia(value);
+      setSocialMediaError(error);
     }
   }
 
@@ -305,6 +332,28 @@ function App() {
               {messageError}
             </small>
           </div>
+          {modalStyle === "aid" && (
+            <div className="form-group">
+              <label htmlFor="socialMedia">Social Media Account*</label>
+              <textarea
+                rows="7"
+                name="socialMedia"
+                onFocus={() => setSocialMediaError("")}
+                onBlur={(e) => {
+                  onBlur(
+                    e.target.value,
+                    /^[a-z\d\-_\s!"#$%&'()*+,-.:;<=>?@[\]^_~\/]+$/giu,
+                    /[^a-z\d\-_\s!"#$%&'()*+,-./:;<=>?@[\]^/_~\/]+$/giu,
+                    "Social media account"
+                  );
+                }}
+                placeholder="Due to the prevalence of scammers, please provide an active social media account where we can verify your identity. We apologize for this additional step."
+              ></textarea>
+              <small className={socialMediaError === "" ? "hidden" : "visible"}>
+                {socialMediaError}
+              </small>
+            </div>
+          )}
         </form>
         <button onClick={sendEmail}>Send</button>
         <button onClick={closeModal}>Cancel</button>

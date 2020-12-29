@@ -25,6 +25,8 @@ app.post("/", (req, res) => {
     req.body.emailBody.amount +
     "</li><li>Email: " +
     req.body.emailBody.email +
+    "</li><li>Social media: " +
+    req.body.emailBody.socialMedia +
     "</li><li>Message: " +
     req.body.emailBody.message +
     "</li></ul></p>";
