@@ -236,7 +236,11 @@ function App() {
         pool at the end of the month will be donated to a larger mutual aid
         fund.
       </h2>
-      <h3>January - $390 remaining</h3>
+      <h3>January - $0 remaining</h3>
+      <h4>
+        We did it! We helped folks this month with rent, medication, and food
+        aid. If you need assistance, We'll have $750 available in February
+      </h4>
       <button onClick={() => openModal("aid")}>Request Aid</button>
       <button onClick={() => openModal("offer")}>Contribute</button>
       <Modal
