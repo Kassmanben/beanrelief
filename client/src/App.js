@@ -236,7 +236,7 @@ function App() {
         pool at the end of the month will be donated to a larger mutual aid
         fund.
       </h2>
-      <h3>March - $610 remaining</h3>
+      <h3>April - $610 remaining</h3>
       {/* <h4>
         We did it! We helped folks this month with rent, medication, and shelter
         assistance in Austin. If you need assistance, We'll have $750 available
